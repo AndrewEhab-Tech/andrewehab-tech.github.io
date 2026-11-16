@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Andrew Ehab | Laravel, PHP, React & Node.js Full Stack Engineer</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+    
+    * {
+      transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* BURGUNDY & BABY BLUE PALETTE TOKENS */
+    :root {
+      /* Day (Light) Mode */
+      --bg-page: #fbf8f5;
+      --bg-surface: #ffffff;
+      --bg-card: #fdf6f7;
+      --bg-card-subtle: #f5eaed;
+      --border-color: #f0d5dc;
+      --border-subtle: #ebd0d7;
+      --text-main: #3b0c17;
+      --text-muted: #784451;
+      --burgundy: #7a1d34;
+      --burgundy-hover: #631528;
+      --burgundy-glow: rgba(122, 29, 52, 0.15);
+      --baby-blue: #0284c7;
+      --baby-blue-accent: #38bdf8;
+      --baby-blue-bg: #e0f2fe;
+      --baby-blue-text: #0369a1;
+      --nav-glass: rgba(255, 255, 255, 0.92);
+      --badge-bg: #fbebf0;
+      --badge-text: #7a1d34;
+    }
+
+    html.dark {
+      /* Night (Dark) Mode */
+      --bg-page: #14070c;
+      --bg-surface: #1f0b13;
+      --bg-card: rgba(43, 15, 25, 0.75);
+      --bg-card-subtle: #290e18;
+      --border-color: rgba(163, 48, 77, 0.28);
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --text-main: #fff5f7;
+      --text-muted: #d4a5b2;
+      --burgundy: #9b2844;
+      --burgundy-hover: #b83353;
+      --burgundy-glow: rgba(155, 40, 68, 0.35);
+      --baby-blue: #38bdf8;
+      --baby-blue-accent: #7dd3fc;
+      --baby-blue-bg: rgba(56, 189, 248, 0.12);
+      --baby-blue-text: #7dd3fc;
+      --nav-glass: rgba(26, 9, 16, 0.92);
+      --badge-bg: rgba(155, 40, 68, 0.25);
+      --badge-text: #fbcfe8;
+    }
+
+    .glass-nav {
+      background: var(--nav-glass);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border-color);
+    }
+
+    .glass-card {
+      background: var(--bg-card);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid var(--border-color);
+    }
+
+    .gradient-burgundy-blue {
+      background: linear-gradient(135deg, #7a1d34 0%, #a82e4a 40%, #38bdf8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    html.dark .gradient-burgundy-blue {
+      background: linear-gradient(135deg, #f472b6 0%, #ec4899 30%, #38bdf8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* DYNAMIC HERO PHOTO ANIMATIONS */
+    @keyframes float-hero {
+      0%, 100% {
+        transform: translateY(0px) rotate(0deg);
+      }
+      25% {
+        transform: translateY(-8px) rotate(0.6deg);
+      }
+      50% {
+        transform: translateY(-3px) rotate(-0.5deg);
+      }
+      75% {
+        transform: translateY(-10px) rotate(0.8deg);
+      }
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% {
+        opacity: 0.55;
+        transform: scale(0.97);
+      }
+      50% {
+        opacity: 0.9;
+        transform: scale(1.05);
+      }
+    }
+
+    @keyframes badge-bob {
+      0%, 100% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-5px);
+      }
+    }
+
+    .animated-hero-wrapper {
+      animation: float-hero 5s ease-in-out infinite;
+    }
+
+    .glow-breathe {
+      animation: pulse-glow 3.5s ease-in-out infinite;
+    }
+
+    .bob-1 {
+      animation: badge-bob 3s ease-in-out infinite;
+    }
+
+    .bob-2 {
+      animation: badge-bob 3.8s ease-in-out infinite 0.5s;
+    }
+
+    /* Modal / Lightbox for Infographic */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 3, 6, 0.92);
+      backdrop-filter: blur(12px);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .modal-backdrop.active {
+      display: flex;
+    }
+
+    /* Hide scrollbar for clean horizontal mobile nav */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    /* GLOBAL MOBILE OVERFLOW CONTAINMENT & BULLETPROOF RESPONSIVENESS */
+    html, body {
+      max-width: 100vw;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    @media (max-width: 767px) {
+      header nav,
+      nav.md\:flex {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+<body class="bg-[var(--bg-page)] text-[var(--text-main)] min-h-screen selection:bg-[#38bdf8]/30 selection:text-[#38bdf8] overflow-x-hidden w-full max-w-full">
+
+  <!-- Glowing atmospheric background blur elements -->
+  <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
+    <div class="absolute -top-32 -left-32 w-96 h-96 bg-[#7a1d34]/25 rounded-full blur-3xl"></div>
+    <div class="absolute top-1/3 -right-32 w-96 h-96 bg-[#38bdf8]/15 rounded-full blur-3xl"></div>
+    <div class="absolute -bottom-32 left-1/3 w-96 h-96 bg-[#a82e4a]/20 rounded-full blur-3xl"></div>
+  </div>
+
+  <div class="relative z-10 max-w-6xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-10 space-y-16 overflow-x-hidden">
+
+    <!-- ========================================== -->
+    <!-- NAVBAR (WITH AUTHENTIC BRAND SVG ICONS)    -->
+    <!-- ========================================== -->
+    <header class="sticky top-4 z-50 w-full max-w-full">
+      <div class="glass-nav rounded-2xl px-3 sm:px-5 py-2.5 sm:py-3 flex items-center justify-between shadow-2xl gap-2 sm:gap-3">
+        
+        <!-- Brand with photo thumbnail -->
+        <div class="flex items-center gap-2.5 sm:gap-3 min-w-0 max-w-[65%] sm:max-w-none">
+          <img src="andrew_profile.jpg" alt="Andrew Ehab" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl object-cover border-2 border-[#38bdf8] shadow-md shadow-[#38bdf8]/20 flex-shrink-0" />
+          <div class="min-w-0">
+            <h1 class="font-extrabold text-sm tracking-tight leading-tight text-[var(--text-main)] truncate">Andrew Ehab</h1>
+            <p class="text-[10px] sm:text-[11px] text-[var(--text-muted)] font-medium truncate">Full-Stack Software Engineer</p>
+          </div>
+        </div>
+
+        <!-- All Navigation & Contact Links Inside the Nav with Authentic SVG Icons -->
+        <nav class="hidden md:flex items-center gap-1 p-1 bg-[var(--bg-card-subtle)] rounded-xl border border-[var(--border-color)] text-xs font-semibold">
+          
+          <!-- 1. Real Infographic SVG Icon -->
+          <a href="#infographic" class="px-2.5 py-1.5 rounded-lg text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-surface)] transition flex items-center gap-2" title="NTI Infographic">
+            <svg class="w-4 h-4 text-[#38bdf8]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+            </svg>
+            <span>Infographic</span>
+          </a>
+
+          <!-- 2. Real Official GitHub SVG Logo -->
+          <a href="https://github.com/AndrewEhab-Tech" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1.5 rounded-lg text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-surface)] transition flex items-center gap-2" title="Explore GitHub">
+            <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+            </svg>
+            <span>GitHub</span>
+          </a>
+
+          <!-- 3. Real Official LinkedIn SVG Logo -->
+          <a href="https://www.linkedin.com/in/andrew-ehab-ab50b4322" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1.5 rounded-lg text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-surface)] transition flex items-center gap-2" title="LinkedIn Profile">
+            <svg class="w-4 h-4 fill-[#0077b5]" viewBox="0 0 24 24">
+              <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
+            </svg>
+            <span>LinkedIn</span>
+          </a>
+
+          <!-- 4. Real Official Gmail SVG Icon -->
+          <a href="https://mail.google.com/mail/?view=cm&fs=1&to=andrewehab816@gmail.com&su=Hello%20Andrew%20-%20From%20Portfolio" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1.5 rounded-lg text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-surface)] transition flex items-center gap-2" title="Compose Gmail">
+            <svg class="w-4 h-4" viewBox="0 0 24 24">
+              <path fill="#EA4335" d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L12 9.546l8.073-6.053C21.691 2.279 24 3.434 24 5.457z"/>
+            </svg>
+            <span>Gmail</span>
+          </a>
+
+          <!-- 5. Real Official WhatsApp SVG Logo -->
+          <a href="https://wa.me/201205164922?text=Hello%20Andrew,%20I%20saw%20your%20portfolio" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1.5 rounded-lg text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-surface)] transition flex items-center gap-2" title="WhatsApp Chat">
+            <svg class="w-4 h-4 fill-[#25D366]" viewBox="0 0 24 24">
+              <path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2zm.01 1.67c4.55 0 8.24 3.7 8.24 8.24 0 2.2-.86 4.28-2.42 5.83-1.56 1.56-3.63 2.41-5.82 2.41-1.44 0-2.85-.38-4.08-1.1l-.29-.17-3.03.8 1.01-2.95-.19-.3A8.196 8.196 0 0 1 3.8 11.91c0-4.54 3.7-8.24 8.25-8.24zm4.52 11.66c-.25-.13-1.48-.73-1.71-.81-.23-.08-.4-.13-.57.13-.17.25-.65.81-.8 1-.15.17-.3.19-.55.06-.25-.13-1.06-.39-2.02-1.24-.75-.67-1.25-1.49-1.4-1.74-.15-.25-.02-.39.11-.51.11-.11.25-.29.38-.44.13-.15.17-.25.25-.42.08-.17.04-.32-.02-.44-.06-.13-.57-1.37-.78-1.88-.2-.5-.41-.43-.57-.44l-.49-.01c-.17 0-.44.06-.67.31-.23.25-.88.86-.88 2.1 0 1.24.9 2.44 1.03 2.61.13.17 1.78 2.71 4.3 3.8.6.26 1.07.41 1.44.53.6.19 1.15.16 1.59.1.48-.07 1.48-.61 1.69-1.19.21-.59.21-1.09.15-1.19-.07-.1-.23-.17-.48-.29z"/>
+            </svg>
+            <span>WhatsApp</span>
+          </a>
+
+          <!-- 6. Real Technical Resume / CV SVG Icon -->
+          <a href="#cv" class="px-2.5 py-1.5 rounded-lg text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-surface)] transition flex items-center gap-2" title="View CV">
+            <svg class="w-4 h-4 text-[#38bdf8]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+            <span>CV</span>
+          </a>
+
+        </nav>
+
+        <!-- Right Controls: Day/Night Mode + Direct CV Action -->
+        <div class="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
+          <!-- Day/Night Mode Switcher Button -->
+          <button id="themeToggle" onclick="toggleTheme()" 
+                  class="flex items-center gap-1 px-2.5 sm:px-3 py-2 rounded-xl text-xs font-bold bg-[var(--bg-card-subtle)] text-[var(--text-main)] border border-[var(--border-color)] hover:border-[#38bdf8] transition shadow-sm"
+                  title="Toggle Day / Night Mode">
+            <span id="themeIcon">☀️</span>
+            <span id="themeLabel" class="hidden sm:inline">Day</span>
+          </button>
+
+          <!-- Direct Native Download CV Button -->
+          <a href="Andrew-Ehab-Full-Stack-Developer-CV.pdf" download="Andrew-Ehab-Full-Stack-Developer-CV.pdf" 
+             class="inline-flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3.5 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-[#7a1d34] to-[#a82e4a] hover:from-[#631528] hover:to-[#91253e] text-white shadow-md shadow-[#7a1d34]/25 transition whitespace-nowrap">
+            <span class="hidden sm:inline">Download CV</span>
+            <span class="sm:hidden">CV</span>
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+            </svg>
+          </a>
+        </div>
+
+      </div>
+
+      <!-- Mobile / Tablet Responsive Navigation Grid (Symmetric 3x2 Grid, Zero Cut-off) -->
+      <div class="grid grid-cols-3 sm:grid-cols-6 md:hidden gap-1.5 mt-2.5 p-1.5 glass-nav rounded-xl text-xs font-semibold border border-[var(--border-color)]">
+        <a href="#infographic" class="px-2 py-1.5 rounded-lg text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-surface)] flex items-center justify-center gap-1.5 text-center text-[11px]">
+          <svg class="w-3.5 h-3.5 text-[#38bdf8]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10"/></svg>
+          <span>Infographic</span>
+        </a>
+        <a href="https://github.com/AndrewEhab-Tech" target="_blank" class="px-2 py-1.5 rounded-lg text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-surface)] flex items-center justify-center gap-1.5 text-center text-[11px]">
+          <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+          <span>GitHub</span>
+        </a>
+        <a href="https://www.linkedin.com/in/andrew-ehab-ab50b4322" target="_blank" class="px-2 py-1.5 rounded-lg text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-surface)] flex items-center justify-center gap-1.5 text-center text-[11px]">
+          <svg class="w-3.5 h-3.5 fill-[#0077b5]" viewBox="0 0 24 24"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg>
+          <span>LinkedIn</span>
+        </a>
+        <a href="https://mail.google.com/mail/?view=cm&fs=1&to=andrewehab816@gmail.com&su=Hello%20Andrew" target="_blank" class="px-2 py-1.5 rounded-lg text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-surface)] flex items-center justify-center gap-1.5 text-center text-[11px]">
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24"><path fill="#EA4335" d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L12 9.546l8.073-6.053C21.691 2.279 24 3.434 24 5.457z"/></svg>
+          <span>Gmail</span>
+        </a>
+        <a href="https://wa.me/201205164922?text=Hello%20Andrew" target="_blank" class="px-2 py-1.5 rounded-lg text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-surface)] flex items-center justify-center gap-1.5 text-center text-[11px]">
+          <svg class="w-3.5 h-3.5 fill-[#25D366]" viewBox="0 0 24 24"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2zm.01 1.67c4.55 0 8.24 3.7 8.24 8.24 0 2.2-.86 4.28-2.42 5.83-1.56 1.56-3.63 2.41-5.82 2.41-1.44 0-2.85-.38-4.08-1.1l-.29-.17-3.03.8 1.01-2.95-.19-.3A8.196 8.196 0 0 1 3.8 11.91c0-4.54 3.7-8.24 8.25-8.24zm4.52 11.66c-.25-.13-1.48-.73-1.71-.81-.23-.08-.4-.13-.57.13-.17.25-.65.81-.8 1-.15.17-.3.19-.55.06-.25-.13-1.06-.39-2.02-1.24-.75-.67-1.25-1.49-1.4-1.74-.15-.25-.02-.39.11-.51.11-.11.25-.29.38-.44.13-.15.17-.25.25-.42.08-.17.04-.32-.02-.44-.06-.13-.57-1.37-.78-1.88-.2-.5-.41-.43-.57-.44l-.49-.01c-.17 0-.44.06-.67.31-.23.25-.88.86-.88 2.1 0 1.24.9 2.44 1.03 2.61.13.17 1.78 2.71 4.3 3.8.6.26 1.07.41 1.44.53.6.19 1.15.16 1.59.1.48-.07 1.48-.61 1.69-1.19.21-.59.21-1.09.15-1.19-.07-.1-.23-.17-.48-.29z"/></svg>
+          <span>WhatsApp</span>
+        </a>
+        <a href="#cv" class="px-2 py-1.5 rounded-lg text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-surface)] flex items-center justify-center gap-1.5 text-center text-[11px]">
+          <svg class="w-3.5 h-3.5 text-[#38bdf8]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          <span>CV</span>
+        </a>
+      </div>
+    </header>
+
+    <!-- ========================================== -->
+    <!-- HERO SECTION (CLEAN & ELEGANT, BUTTONS IN NAV) -->
+    <!-- ========================================== -->
+    <section class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center pt-2 sm:pt-6">
+      
+      <!-- Left Column: Copy (Summary) - order-2 on mobile (under photo), order-1 on desktop (left) -->
+      <div class="lg:col-span-7 space-y-6 text-center lg:text-left order-2 lg:order-1">
+        <h2 class="text-4xl sm:text-6xl font-black tracking-tight text-[var(--text-main)]">
+          <span class="gradient-burgundy-blue">Summary</span>
+        </h2>
+        
+        <p class="text-[var(--text-muted)] text-base sm:text-lg leading-relaxed max-w-xl mx-auto lg:mx-0">
+          Egyptian Full-Stack Engineer with 3+ years experience designing robust architectures in <strong>Laravel & PHP</strong>, <strong>React</strong>, and <strong>Node.js</strong>, along with real-time WebSockets and <strong>2 AWS Certifications</strong>. Featured NTI Graduate & Digilians AI Scholar.
+        </p>
+      </div>
+
+      <!-- Right Column: PHOTO - order-1 on mobile (comes FIRST on top), order-2 on desktop (right) -->
+      <div class="lg:col-span-5 flex justify-center w-full order-1 lg:order-2">
+        <div class="relative animated-hero-wrapper group w-full max-w-[305px] sm:max-w-[380px] mx-auto">
+          
+          <!-- Outer dynamic pulsing aura behind photo -->
+          <div class="absolute -inset-3 bg-gradient-to-tr from-[#7a1d34] via-[#9b2844] to-[#38bdf8] rounded-[2.5rem] blur-xl opacity-60 glow-breathe"></div>
+
+          <!-- Photo Card Container with Burgundy & Baby Blue border -->
+          <div class="relative p-2 rounded-[2.2rem] bg-gradient-to-tr from-[#7a1d34] via-[#9b2844] to-[#38bdf8] shadow-2xl">
+            <div class="relative rounded-[1.8rem] overflow-hidden bg-[var(--bg-surface)]">
+              
+              <!-- Clean, clear, completely unobstructed portrait of Andrew -->
+              <img src="andrew_profile.jpg" alt="Andrew Ehab" 
+                   class="w-full h-[420px] sm:h-[500px] object-cover object-top transition duration-500 group-hover:scale-105" />
+
+              <!-- Floating Badge 1: Active Status (TOP-LEFT) - Staggered at top-5 -->
+              <div class="absolute top-5 left-3 sm:left-3.5 z-30 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full bg-[#14070c]/85 backdrop-blur-md border border-emerald-500/40 text-emerald-400 font-bold text-[10px] sm:text-[11px] shadow-xl flex items-center gap-1.5 sm:gap-2">
+                <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                <span>Available</span>
+              </div>
+
+              <!-- Floating Badge 2: 2x AWS Certified (TOP-RIGHT) - High in the sky, completely away from face -->
+              <div class="absolute top-3 right-2.5 sm:right-3 z-30 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-2xl bg-[#14070c]/85 backdrop-blur-md border border-[#38bdf8]/40 text-[#38bdf8] font-bold text-[10px] sm:text-xs shadow-2xl flex items-center gap-1.5 rotate-1 hover:rotate-0 transition-transform bob-1">
+                <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-[#38bdf8]" viewBox="0 0 24 24">
+                  <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM19 18H6c-2.21 0-4-1.79-4-4 0-2.05 1.53-3.76 3.56-3.97l1.07-.11.5-.95C8.08 7.14 9.94 6 12 6c2.62 0 4.88 1.86 5.39 4.43l.3 1.5 1.53.11c1.56.1 2.78 1.41 2.78 2.96 0 1.65-1.35 3-3 3z"/>
+                </svg>
+                <span>2x AWS Certified</span>
+              </div>
+
+              <!-- Floating Badge 3: React & Node.js APIs (LOWER-MID LEFT) - Staggered at bottom-28 -->
+              <div class="absolute bottom-28 left-2.5 sm:left-4 z-30 px-2.5 py-1 sm:px-3.5 sm:py-2 rounded-2xl bg-[#14070c]/85 backdrop-blur-md border border-[#61DAFB]/40 text-[#61DAFB] font-bold text-[10px] sm:text-xs shadow-2xl flex items-center gap-1.5 sm:gap-2 -rotate-2 hover:rotate-0 transition-transform bob-2">
+                <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-[#61DAFB]" viewBox="0 0 24 24">
+                  <path d="M12 9.07c-1.62 0-2.93 1.31-2.93 2.93s1.31 2.93 2.93 2.93 2.93-1.31 2.93-2.93-1.31-2.93-2.93-2.93zm0-7.07c-4.45 0-8.58 2.19-10.74 5.7-.35.58-.17 1.33.41 1.68.58.35 1.33.17 1.68-.41C5.07 5.78 8.35 4 12 4s6.93 1.78 8.65 4.97c.35.58 1.1.76 1.68.41.58-.35.76-1.1.41-1.68C20.58 4.19 16.45 2 12 2zm0 16c-3.65 0-6.93-1.78-8.65-4.97-.35-.58-1.1-.76-1.68-.41-.58.35-.76 1.1-.41 1.68C3.42 17.81 7.55 20 12 20s8.58-2.19 10.74-5.7c.35-.58.17-1.33-.41-1.68-.58-.35-1.33-.17-1.68.41C18.93 16.22 15.65 18 12 18z"/>
+                </svg>
+                <span>React & Node.js APIs</span>
+              </div>
+
+              <!-- Floating Badge 4: Laravel & PHP Full Stack (BOTTOM-RIGHT) - Staggered at bottom-5 -->
+              <div class="absolute bottom-5 right-2.5 sm:right-4 z-30 px-2.5 py-1 sm:px-3.5 sm:py-2 rounded-2xl bg-[#14070c]/85 backdrop-blur-md border border-[#FF2D20]/40 text-[#fca5a5] font-bold text-[10px] sm:text-xs shadow-2xl flex items-center gap-1.5 sm:gap-2 rotate-1 hover:rotate-0 transition-transform bob-1">
+                <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-[#FF2D20]" viewBox="0 0 24 24">
+                  <path d="M11.667 0l9.333 5.417v10.833L11.667 21.667 2.333 16.25V5.417L11.667 0zm-.001 2.313L4.333 6.568v8.514l7.333 4.255 7.333-4.255V6.568l-7.333-4.255z"/>
+                </svg>
+                <span>Laravel & PHP Full Stack</span>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ========================================== -->
+    <!-- DEDICATED GITHUB SHOWCASE SECTION          -->
+    <!-- ========================================== -->
+    <section id="github" class="space-y-6 scroll-mt-24">
+      <div class="flex items-center justify-between border-b border-[var(--border-color)] pb-4">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-[#38bdf8] font-mono text-xs font-bold uppercase tracking-wider">GitHub Showcase</span>
+            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-slate-800 text-white border border-white/20">
+              OPEN SOURCE & REPOS
+            </span>
+          </div>
+          <h3 class="text-2xl sm:text-3xl font-black text-[var(--text-main)] mt-1">
+            GitHub Repositories & Engineering Code
+          </h3>
+          <p class="text-xs sm:text-sm text-[var(--text-muted)]">
+            Explore production architectures, full-stack implementations, and open source repositories.
+          </p>
+        </div>
+        <svg class="w-7 h-7 fill-current text-[var(--text-main)]" viewBox="0 0 24 24">
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+        </svg>
+      </div>
+
+      <div class="glass-card rounded-3xl p-6 sm:p-8 border border-[var(--border-color)] space-y-6">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 pb-6 border-b border-[var(--border-color)]">
+          <div class="flex items-center gap-4">
+            <div class="w-16 h-16 rounded-2xl bg-slate-900 border border-white/20 flex items-center justify-center text-white shadow-xl">
+              <svg class="w-9 h-9 fill-current" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h4 class="text-xl font-bold text-[var(--text-main)]">AndrewEhab-Tech</h4>
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-[var(--baby-blue-bg)] text-[var(--baby-blue-text)]">Active Developer</span>
+              </div>
+              <p class="text-xs text-[var(--text-muted)] font-mono mt-0.5">https://github.com/AndrewEhab-Tech</p>
+            </div>
+          </div>
+
+          <a href="https://github.com/AndrewEhab-Tech" target="_blank" rel="noopener noreferrer" 
+             class="px-6 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs border border-white/20 shadow-lg transition flex items-center gap-2">
+            <span>Explore Andrew's GitHub</span>
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+          </a>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+          <div class="p-4 rounded-xl bg-[var(--bg-card-subtle)] border border-[var(--border-color)] space-y-1">
+            <span class="text-slate-400 font-mono text-[11px]">Primary Focus</span>
+            <div class="font-bold text-[var(--text-main)] text-sm">Laravel & PHP / Node.js</div>
+            <p class="text-[var(--text-muted)]">RESTful APIs, MVC Architecture, Eloquent ORM & WebSockets</p>
+          </div>
+
+          <div class="p-4 rounded-xl bg-[var(--bg-card-subtle)] border border-[var(--border-color)] space-y-1">
+            <span class="text-slate-400 font-mono text-[11px]">Frontend Repos</span>
+            <div class="font-bold text-[var(--text-main)] text-sm">React, Next.js, Vite</div>
+            <p class="text-[var(--text-muted)]">Tailwind CSS, TanStack Query, Responsive UIs</p>
+          </div>
+
+          <div class="p-4 rounded-xl bg-[var(--bg-card-subtle)] border border-[var(--border-color)] space-y-1">
+            <span class="text-slate-400 font-mono text-[11px]">Graduation Repo</span>
+            <div class="font-bold text-[var(--text-main)] text-sm">EduCommunity Egypt</div>
+            <a href="https://github.com/mansourfared3-hue/last-graduationproject" target="_blank" class="text-[#38bdf8] hover:underline font-semibold block flex items-center gap-1 mt-1">
+              <span>View NTI Graduation Repo</span>
+              <svg class="w-3 h-3 inline" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- PILLAR 1: EDUCOMMUNITY EGYPT INFOGRAPHIC   -->
+    <!-- ========================================== -->
+    <section id="infographic" class="space-y-8 scroll-mt-24">
+      <div class="flex items-center justify-between border-b border-[var(--border-color)] pb-4">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-[#38bdf8] font-mono text-xs font-bold uppercase tracking-wider">Pillar 01</span>
+            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-[var(--badge-bg)] text-[var(--badge-text)] border border-[var(--border-color)]">
+              NTI GRADUATION PROJECT
+            </span>
+          </div>
+          <h3 class="text-2xl sm:text-3xl font-black text-[var(--text-main)] mt-1">
+            EduCommunity Egypt Infographic
+          </h3>
+          <p class="text-xs sm:text-sm text-[var(--text-muted)]">
+            A Student-Community Learning Platform • Digilians 9-Month Professional Diploma • Ministry of Communications (MCIT)
+          </p>
+        </div>
+        <svg class="w-7 h-7 text-[#38bdf8]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+        </svg>
+      </div>
+
+      <!-- Main Infographic Spotlight Box -->
+      <div class="glass-card rounded-3xl p-6 sm:p-8 border border-[var(--border-color)] space-y-8 relative overflow-hidden">
+        
+        <!-- Header row of the project -->
+        <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pb-6 border-b border-[var(--border-color)]">
+          <div>
+            <div class="flex items-center gap-3">
+              <span class="px-3 py-1 rounded-lg bg-[var(--burgundy)] text-white text-xs font-bold tracking-wide">
+                Track: AI-Based Software Development
+              </span>
+              <span class="text-xs text-[var(--baby-blue-text)] font-semibold font-mono">2025 / 2026</span>
+            </div>
+            <h4 class="text-xl sm:text-2xl font-black text-[var(--text-main)] mt-2">
+              EduCommunity Egypt — A Student-Community Learning Platform
+            </h4>
+            <p class="text-xs sm:text-sm text-[var(--text-muted)] mt-1">
+              National Telecommunication Institute (NTI) in partnership with Ministry of Communications and Information Technology
+            </p>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <button onclick="openModal()" 
+                    class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#7a1d34] to-[#a82e4a] hover:from-[#631528] hover:to-[#91253e] text-white font-bold text-xs shadow-lg shadow-[#7a1d34]/25 transition flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"/></svg>
+              <span>View Full Project Poster</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- High-res Infographic preview with zoom trigger -->
+        <div class="relative group rounded-2xl overflow-hidden border border-[var(--border-color)] bg-black/40 cursor-pointer shadow-2xl" onclick="openModal()">
+          <img src="infographic_educommunity.jpg" alt="EduCommunity Egypt Graduation Project Poster" 
+               class="w-full h-auto max-h-[520px] object-cover object-top transition duration-500 group-hover:scale-102" />
+          
+          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-6">
+            <div class="flex items-center justify-between w-full">
+              <div class="text-white">
+                <span class="text-xs uppercase tracking-wider text-[#38bdf8] font-bold">Interactive Lightbox Preview</span>
+                <p class="text-sm font-bold">Official Project Identity, System Architecture & Deliverables</p>
+              </div>
+              <span class="px-3 py-1.5 rounded-xl bg-white/20 backdrop-blur-md text-white text-xs font-bold flex items-center gap-1.5">
+                <span>Zoom Sheet</span>
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3 Architecture Breakdown Columns -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
+          
+          <!-- Column 1: Client Apps -->
+          <div class="p-5 rounded-2xl bg-[var(--bg-card-subtle)] border border-[var(--border-color)] space-y-3">
+            <div class="flex items-center gap-2 text-[#38bdf8] font-bold text-xs uppercase tracking-wider">
+              <svg class="w-4 h-4 fill-[#61DAFB]" viewBox="0 0 24 24"><path d="M12 9.07c-1.62 0-2.93 1.31-2.93 2.93s1.31 2.93 2.93 2.93 2.93-1.31 2.93-2.93-1.31-2.93-2.93-2.93zm0-7.07c-4.45 0-8.58 2.19-10.74 5.7-.35.58-.17 1.33.41 1.68.58.35 1.33.17 1.68-.41C5.07 5.78 8.35 4 12 4s6.93 1.78 8.65 4.97c.35.58 1.1.76 1.68.41.58-.35.76-1.1.41-1.68C20.58 4.19 16.45 2 12 2zm0 16c-3.65 0-6.93-1.78-8.65-4.97-.35-.58-1.1-.76-1.68-.41-.58.35-.76 1.1-.41 1.68C3.42 17.81 7.55 20 12 20s8.58-2.19 10.74-5.7c.35-.58.17-1.33-.41-1.68-.58-.35-1.33-.17-1.68.41C18.93 16.22 15.65 18 12 18z"/></svg>
+              <span>Frontend Clients (React.js)</span>
+            </div>
+            <h5 class="font-extrabold text-sm text-[var(--text-main)]">3 Client Applications, 1 Unified System</h5>
+            <ul class="text-xs space-y-2 text-[var(--text-muted)]">
+              <li>• <strong>Student Web Client:</strong> Interactive live lessons, real-time tests, and peer communities.</li>
+              <li>• <strong>Teacher Web Client:</strong> Class scheduling, assignment grading, and live session tools.</li>
+              <li>• <strong>Administrative Portal:</strong> Moderation, analytics dashboard, and shift management.</li>
+            </ul>
+          </div>
+
+          <!-- Column 2: Backend Architecture -->
+          <div class="p-5 rounded-2xl bg-[var(--bg-card-subtle)] border border-[var(--border-color)] space-y-3">
+            <div class="flex items-center gap-2 text-[var(--baby-blue-text)] font-bold text-xs uppercase tracking-wider">
+              <svg class="w-4 h-4 fill-emerald-400" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+              <span>Backend & Database</span>
+            </div>
+            <h5 class="font-extrabold text-sm text-[var(--text-main)]">Node.js + Express REST & Socket.IO</h5>
+            <ul class="text-xs space-y-2 text-[var(--text-muted)]">
+              <li>• <strong>Real-Time Layer:</strong> Socket.IO connection for instant messaging & active user presence.</li>
+              <li>• <strong>Shared Database:</strong> MongoDB document database with optimized Mongoose schemas.</li>
+              <li>• <strong>Recommendation Engine:</strong> AI/rating-based teacher discovery algorithms.</li>
+            </ul>
+          </div>
+
+          <!-- Column 3: Key Deliverables & Tech -->
+          <div class="p-5 rounded-2xl bg-[var(--bg-card-subtle)] border border-[var(--border-color)] space-y-3">
+            <div class="flex items-center gap-2 text-[#38bdf8] font-bold text-xs uppercase tracking-wider">
+              <svg class="w-4 h-4 fill-amber-400" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+              <span>Tools & Deliverables</span>
+            </div>
+            <h5 class="font-extrabold text-sm text-[var(--text-main)]">Real-time & Production Features</h5>
+            <ul class="text-xs space-y-2 text-[var(--text-muted)]">
+              <li>• <strong>Real-time Media:</strong> Socket.IO, Multer, Cloudinary, Jitsi Meet</li>
+              <li>• <strong>Security:</strong> JWT, Bcrypt authentication & RBAC</li>
+              <li>• <strong>Teacher Shifts:</strong> Automatic attendance & duty logging</li>
+              <li>• <strong>Gamification:</strong> Leaderboards, student points & challenges</li>
+            </ul>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- PILLAR 2: LINKEDIN PROFILE SECTION         -->
+    <!-- ========================================== -->
+    <section id="linkedin" class="space-y-8 scroll-mt-24">
+      <div class="flex items-center justify-between border-b border-[var(--border-color)] pb-4">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-[#38bdf8] font-mono text-xs font-bold uppercase tracking-wider">Pillar 02</span>
+            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-[#0077b5]/15 text-[#0284c7] dark:text-[#38bdf8] border border-[#0077b5]/30">
+              PROFESSIONAL CREDIBILITY
+            </span>
+          </div>
+          <h3 class="text-2xl sm:text-3xl font-black text-[var(--text-main)] mt-1">
+            LinkedIn Profile & Verified Endorsements
+          </h3>
+          <p class="text-xs sm:text-sm text-[var(--text-muted)]">
+            Direct gateway to verified credentials, professional network, and recommendations.
+          </p>
+        </div>
+        <svg class="w-7 h-7 fill-[#0077b5]" viewBox="0 0 24 24">
+          <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
+        </svg>
+      </div>
+
+      <!-- LinkedIn Showcase Card -->
+      <div class="glass-card rounded-3xl p-6 sm:p-8 border border-[var(--border-color)] relative overflow-hidden space-y-6">
+        
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 pb-6 border-b border-[var(--border-color)]">
+          
+          <div class="flex items-center gap-4">
+            <!-- Real photo avatar -->
+            <div class="w-20 h-20 rounded-2xl p-0.5 bg-gradient-to-br from-[#7a1d34] via-[#9b2844] to-[#38bdf8] shadow-xl">
+              <img src="andrew_profile.jpg" alt="Andrew Ehab" class="w-full h-full rounded-2xl object-cover" />
+            </div>
+
+            <div class="space-y-1">
+              <div class="flex items-center gap-2">
+                <h4 class="text-xl sm:text-2xl font-extrabold text-[var(--text-main)]">Andrew Ehab</h4>
+                <span class="text-[#38bdf8]" title="Verified Profile">
+                  <svg class="w-5 h-5 inline fill-current" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                </span>
+              </div>
+              <p class="text-xs sm:text-sm text-[var(--baby-blue-text)] font-bold">
+                Laravel & PHP & React & Node.js Developer | 2x AWS Certified | DevSecOps & Cloud
+              </p>
+              <p class="text-xs text-[var(--text-muted)]">
+                Cairo, Egypt • 500+ Connections • Canadian International College & NTI Scholar
+              </p>
+            </div>
+          </div>
+
+          <!-- Working LinkedIn Buttons -->
+          <div class="flex items-center gap-2.5 w-full sm:w-auto">
+            <!-- Connect Button -->
+            <a href="https://www.linkedin.com/in/andrew-ehab-ab50b4322" target="_blank" rel="noopener noreferrer"
+               class="flex-1 sm:flex-none px-6 py-2.5 rounded-xl bg-[#0077b5] hover:bg-[#006399] text-white font-bold text-xs shadow-lg shadow-[#0077b5]/30 transition flex items-center justify-center gap-2">
+              <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg>
+              <span>Connect on LinkedIn</span>
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+            </a>
+
+            <!-- Working Message Button -->
+            <a href="https://www.linkedin.com/in/andrew-ehab-ab50b4322/" target="_blank" rel="noopener noreferrer"
+               class="px-5 py-2.5 rounded-xl bg-[var(--bg-card-subtle)] text-[var(--text-main)] hover:border-[#38bdf8] border border-[var(--border-color)] font-bold text-xs transition flex items-center gap-2"
+               title="Send message to Andrew on LinkedIn">
+              <svg class="w-4 h-4 fill-[#0077b5]" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0-2-.9-2-2V4c0-1.1-.9-2-2-2z"/></svg>
+              <span>Message</span>
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+            </a>
+          </div>
+
+        </div>
+
+        <!-- Bio & Endorsements -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
+          <div class="md:col-span-2 space-y-2">
+            <h5 class="text-xs font-bold uppercase tracking-wider text-[var(--text-muted)]">Professional Bio</h5>
+            <p class="text-xs sm:text-sm text-[var(--text-main)] leading-relaxed">
+              Full-Stack Developer with hands-on expertise building enterprise web applications in Laravel & PHP, robust APIs in Node.js/Express, resilient frontends with React, and modern cloud deployment. Backed by 2 AWS certifications and a DevSecOps engineering mindset—delivering secure, scalable, and high-performance applications.
+            </p>
+          </div>
+
+          <div class="space-y-2">
+            <h5 class="text-xs font-bold uppercase tracking-wider text-[var(--text-muted)]">Top Endorsed Skills</h5>
+            <div class="flex flex-wrap gap-1.5">
+              <span class="px-2.5 py-1 rounded-lg bg-[var(--badge-bg)] text-[var(--badge-text)] text-xs font-bold border border-[var(--border-color)]">Laravel & PHP</span>
+              <span class="px-2.5 py-1 rounded-lg bg-[var(--baby-blue-bg)] text-[var(--baby-blue-text)] text-xs font-bold border border-[#38bdf8]/30">React.js</span>
+              <span class="px-2.5 py-1 rounded-lg bg-[var(--baby-blue-bg)] text-[var(--baby-blue-text)] text-xs font-bold border border-[#38bdf8]/30">Node.js & Express</span>
+              <span class="px-2.5 py-1 rounded-lg bg-[var(--badge-bg)] text-[var(--badge-text)] text-xs font-bold border border-[var(--border-color)]">AWS (2 Certs)</span>
+              <span class="px-2.5 py-1 rounded-lg bg-[var(--baby-blue-bg)] text-[var(--baby-blue-text)] text-xs font-bold border border-[#38bdf8]/30">Socket.IO WebSockets</span>
+              <span class="px-2.5 py-1 rounded-lg bg-[var(--badge-bg)] text-[var(--badge-text)] text-xs font-bold border border-[var(--border-color)]">Docker & CI/CD</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- PILLAR 3: CV SECTION (DIRECT DEVICE DL)    -->
+    <!-- ========================================== -->
+    <section id="cv" class="space-y-8 scroll-mt-24">
+      <div class="flex items-center justify-between border-b border-[var(--border-color)] pb-4">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-[#38bdf8] font-mono text-xs font-bold uppercase tracking-wider">Pillar 03</span>
+            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-[var(--badge-bg)] text-[var(--badge-text)] border border-[var(--border-color)]">
+              FAST & DIRECT
+            </span>
+          </div>
+          <h3 class="text-2xl sm:text-3xl font-black text-[var(--text-main)] mt-1">
+            Curriculum Vitae (Clean & Direct)
+          </h3>
+          <p class="text-xs sm:text-sm text-[var(--text-muted)]">
+            Instant full-screen viewing in a new tab or direct download to any mobile, laptop, or desktop device.
+          </p>
+        </div>
+        <svg class="w-7 h-7 text-[#38bdf8]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+        </svg>
+      </div>
+
+      <!-- CV Card with Instant Actions -->
+      <div class="glass-card rounded-3xl p-6 sm:p-8 border border-[var(--border-color)] space-y-6">
+        
+        <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 p-6 rounded-2xl bg-[var(--bg-card-subtle)] border border-[var(--border-color)]">
+          <div class="space-y-1">
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-[#38bdf8]"></span>
+              <h4 class="text-base sm:text-lg font-bold text-[var(--text-main)]">Andrew-Ehab-Full-Stack-Developer-CV.pdf</h4>
+            </div>
+            <p class="text-xs text-[var(--text-muted)]">Complete 3-Page Official Technical Resume • Updated 2026</p>
+          </div>
+
+          <!-- Direct Download & View Buttons -->
+          <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+            
+            <!-- Open Full Screen Tab -->
+            <a href="Andrew-Ehab-Full-Stack-Developer-CV.pdf" target="_blank" rel="noopener noreferrer"
+               class="flex-1 md:flex-none px-6 py-3 rounded-xl bg-gradient-to-r from-[#7a1d34] to-[#a82e4a] hover:from-[#631528] hover:to-[#91253e] text-white font-extrabold text-xs shadow-lg shadow-[#7a1d34]/30 transition flex items-center justify-center gap-2">
+              <span>Open in Full Screen (New Tab)</span>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+            </a>
+
+            <!-- Guaranteed Direct Download for Mobile & Laptop -->
+            <a href="Andrew-Ehab-Full-Stack-Developer-CV.pdf" download="Andrew-Ehab-Full-Stack-Developer-CV.pdf"
+               class="flex-1 md:flex-none px-6 py-3 rounded-xl bg-[var(--bg-surface)] hover:border-[#38bdf8] text-[var(--text-main)] font-bold text-xs border border-[var(--border-color)] transition flex items-center justify-center gap-2 shadow-sm">
+              <span>Download PDF File</span>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Clean Formatted Summary of the CV Content -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+          
+          <div class="space-y-4">
+            <h5 class="text-xs font-bold uppercase tracking-wider text-[var(--text-muted)] flex items-center gap-2">
+              <svg class="w-4 h-4 text-[#38bdf8]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+              <span>Key Experience Highlights</span>
+            </h5>
+
+            <div class="space-y-3 text-xs">
+              <div class="p-4 rounded-xl bg-[var(--bg-card-subtle)] border border-[var(--border-color)] space-y-1">
+                <div class="flex justify-between font-bold text-[var(--text-main)]">
+                  <span>AI Software Development (Digilians / NTI)</span>
+                  <span class="text-[var(--baby-blue-text)] font-mono">12/2025 – 08/2026</span>
+                </div>
+                <p class="text-[var(--text-muted)]">Architected backend REST APIs with Laravel & Node.js, Express, MongoDB/MySQL, Redis caching, and secured OAuth2/JWT auth. Embedded DevSecOps CI/CD pipelines via GitHub Actions.</p>
+              </div>
+
+              <div class="p-4 rounded-xl bg-[var(--bg-card-subtle)] border border-[var(--border-color)] space-y-1">
+                <div class="flex justify-between font-bold text-[var(--text-main)]">
+                  <span>Software Development Intern (ACUD)</span>
+                  <span class="text-[var(--baby-blue-text)] font-mono">10/2026 – 11/2026</span>
+                </div>
+                <p class="text-[var(--text-muted)]">Engineered AI-driven recruitment matching engine and automated technical assessments for enterprise hiring.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="space-y-4">
+            <h5 class="text-xs font-bold uppercase tracking-wider text-[var(--text-muted)] flex items-center gap-2">
+              <svg class="w-4 h-4 text-[#38bdf8]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5z"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/></svg>
+              <span>Credentials & Direct Contact</span>
+            </h5>
+
+            <div class="p-4 rounded-xl bg-[var(--bg-card-subtle)] border border-[var(--border-color)] space-y-3 text-xs">
+              <div class="flex justify-between pb-2 border-b border-[var(--border-color)]">
+                <span class="text-[var(--text-muted)]">Education</span>
+                <span class="text-[var(--text-main)] font-bold">B.Sc. Computer Science (CIC, 2024)</span>
+              </div>
+              
+              <!-- Corrected 2x AWS Certifications with AWS Cloud SVG -->
+              <div class="flex justify-between pb-2 border-b border-[var(--border-color)] items-center">
+                <span class="text-[var(--text-muted)]">Certifications</span>
+                <span class="text-[#38bdf8] font-bold flex items-center gap-1.5">
+                  <svg class="w-3.5 h-3.5 fill-[#38bdf8]" viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM19 18H6c-2.21 0-4-1.79-4-4 0-2.05 1.53-3.76 3.56-3.97l1.07-.11.5-.95C8.08 7.14 9.94 6 12 6c2.62 0 4.88 1.86 5.39 4.43l.3 1.5 1.53.11c1.56.1 2.78 1.41 2.78 2.96 0 1.65-1.35 3-3 3z"/></svg>
+                  <span>2x AWS Certified & DevSecOps</span>
+                </span>
+              </div>
+
+              <!-- Clickable Gmail Direct with Gmail SVG -->
+              <div class="flex justify-between pb-2 border-b border-[var(--border-color)] items-center">
+                <span class="text-[var(--text-muted)]">Email</span>
+                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=andrewehab816@gmail.com&su=Hello%20Andrew%20-%20From%20Portfolio" 
+                   target="_blank" rel="noopener noreferrer"
+                   class="text-[var(--text-main)] hover:text-[#38bdf8] font-mono font-bold transition flex items-center gap-1.5">
+                  <svg class="w-3.5 h-3.5" viewBox="0 0 24 24"><path fill="#EA4335" d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L12 9.546l8.073-6.053C21.691 2.279 24 3.434 24 5.457z"/></svg>
+                  <span>andrewehab816@gmail.com ↗</span>
+                </a>
+              </div>
+
+              <!-- Clickable WhatsApp Direct with WhatsApp SVG -->
+              <div class="flex justify-between items-center">
+                <span class="text-[var(--text-muted)]">WhatsApp / Phone</span>
+                <a href="https://wa.me/201205164922?text=Hello%20Andrew" target="_blank" rel="noopener noreferrer"
+                   class="text-[#25D366] hover:underline font-mono font-bold transition flex items-center gap-1.5">
+                  <svg class="w-3.5 h-3.5 fill-[#25D366]" viewBox="0 0 24 24"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2zm.01 1.67c4.55 0 8.24 3.7 8.24 8.24 0 2.2-.86 4.28-2.42 5.83-1.56 1.56-3.63 2.41-5.82 2.41-1.44 0-2.85-.38-4.08-1.1l-.29-.17-3.03.8 1.01-2.95-.19-.3A8.196 8.196 0 0 1 3.8 11.91c0-4.54 3.7-8.24 8.25-8.24zm4.52 11.66c-.25-.13-1.48-.73-1.71-.81-.23-.08-.4-.13-.57.13-.17.25-.65.81-.8 1-.15.17-.3.19-.55.06-.25-.13-1.06-.39-2.02-1.24-.75-.67-1.25-1.49-1.4-1.74-.15-.25-.02-.39.11-.51.11-.11.25-.29.38-.44.13-.15.17-.25.25-.42.08-.17.04-.32-.02-.44-.06-.13-.57-1.37-.78-1.88-.2-.5-.41-.43-.57-.44l-.49-.01c-.17 0-.44.06-.67.31-.23.25-.88.86-.88 2.1 0 1.24.9 2.44 1.03 2.61.13.17 1.78 2.71 4.3 3.8.6.26 1.07.41 1.44.53.6.19 1.15.16 1.59.1.48-.07 1.48-.61 1.69-1.19.21-.59.21-1.09.15-1.19-.07-.1-.23-.17-.48-.29z"/></svg>
+                  <span>+20 1205164922 ↗</span>
+                </a>
+              </div>
+            </div>
+
+            <div class="text-center pt-2">
+              <a href="Andrew-Ehab-Full-Stack-Developer-CV.pdf" target="_blank" rel="noopener noreferrer"
+                 class="text-xs text-[var(--baby-blue-text)] hover:underline font-bold inline-flex items-center gap-1">
+                <span>View original PDF in full layout</span> →
+              </a>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="w-full text-center text-xs text-[var(--text-muted)] pt-8 pb-10 border-t border-[var(--border-color)] flex items-center justify-center">
+      <p class="text-center tracking-wide font-medium">© 2026 Andrew Ehab • Full-Stack Software Engineer</p>
+    </footer>
+
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODAL / LIGHTBOX FOR INFOGRAPHIC SHEET     -->
+  <!-- ========================================== -->
+  <div id="imageModal" class="modal-backdrop" onclick="closeModal(event)">
+    <div class="relative max-w-4xl max-h-[92vh] p-2 bg-[#1b0a11] border border-[#a82e4a]/40 rounded-3xl overflow-auto shadow-2xl" onclick="event.stopPropagation()">
+      <div class="sticky top-0 z-20 flex justify-between items-center p-3 bg-[#1b0a11]/90 backdrop-blur-md border-b border-[#a82e4a]/20 mb-2">
+        <div class="flex items-center gap-2">
+          <span class="w-3 h-3 rounded-full bg-[#38bdf8]"></span>
+          <span class="text-xs font-bold text-white">EduCommunity Egypt — Full Graduation Infographic Sheet</span>
+        </div>
+        <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center font-bold text-sm">
+          ✕
+        </button>
+      </div>
+      <img src="infographic_educommunity.jpg" alt="EduCommunity Egypt Full Infographic" class="w-full h-auto rounded-2xl" />
+    </div>
+  </div>
+
+  <!-- Day / Night Mode Scripts -->
+  <script>
+    // Theme Toggle Logic
+    function initTheme() {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'light') {
+        document.documentElement.classList.remove('dark');
+        updateThemeUI(false);
+      } else {
+        document.documentElement.classList.add('dark');
+        updateThemeUI(true);
+      }
+    }
+
+    function toggleTheme() {
+      const isDark = document.documentElement.classList.toggle('dark');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      updateThemeUI(isDark);
+    }
+
+    function updateThemeUI(isDark) {
+      const icon = document.getElementById('themeIcon');
+      const label = document.getElementById('themeLabel');
+      if (isDark) {
+        icon.textContent = '🌙';
+        label.textContent = 'Night';
+      } else {
+        icon.textContent = '☀️';
+        label.textContent = 'Day';
+      }
+    }
+
+    // Modal Lightbox Logic
+    function openModal() {
+      document.getElementById('imageModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      document.getElementById('imageModal').classList.remove('active');
+      document.body.style.overflow = 'auto';
+    }
+
+    // Initialize on load
+    initTheme();
+  </script>
+
+</body>
+</html>

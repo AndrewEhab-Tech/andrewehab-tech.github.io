@@ -946,6 +946,11 @@
 
   <!-- Day / Night Mode Scripts -->
   <script>
+    // Clean Address Bar: remove any query parameters (like ?v=2) immediately
+    if (window.location.search) {
+      window.history.replaceState(null, '', window.location.pathname);
+    }
+
     // Theme Toggle Logic
     function initTheme() {
       const savedTheme = localStorage.getItem('theme');
